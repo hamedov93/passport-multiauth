@@ -70,7 +70,7 @@ $accessToken->revoke();
 ```
 
 # Warning
-- Relationships that depend on `oauth_access_tokens` table such as `$user->tokens()` and `$token->user();` are not yet implemented for multiauth and wont't work, You wouldn't need them any way. However they will be implemented in a future release.
+- Relationships that depend on `oauth_access_tokens` table such as `$user->tokens()` and `$token->user();` are not yet implemented for multiauth and won't work, You wouldn't need them anyway. However they will be implemented in a future release.
 
 # Custom grants:
 - This feature is still in development.
