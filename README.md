@@ -5,21 +5,8 @@ This package simply enables you to authenticate models other than App\User using
 `composer require hamedov/passport-multiauth`
 
 # Usage
-- First we need to prevent autodiscovery of passport package service provider to register our own modified one.
-- To do This add the following to your composer.json
- ```
- {
-     ...
-     "extra": {
-         "laravel": {
-             "dont-discover": [
-                 "laravel/passport"
-             ]
-         }
-     },
- }
-```
-- Add your new guards and providers to config/auth.php
+
+- Add your guards and providers to config/auth.php
 ```
 'guards' => [
     ...
