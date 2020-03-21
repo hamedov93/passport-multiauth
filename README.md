@@ -69,5 +69,8 @@ Route::middleware('auth:admin')->get('/user', function (Request $request) {
 - Of course all models must extend `Illuminate\Foundation\Auth\User` and use `Laravel\Passport\HasApiTokens` Trait
 - That's all.
 
+# Custom guards:
+- This feature is still in development.
+
 # License
 Released under the Mit license, see [LICENSE](https://github.com/hamedov93/passport-multiauth/blob/master/LICENSE)
