@@ -3,8 +3,55 @@
 namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Laravel\Passport\Bridge\User;
+use Hamedov\PassportMultiauth\Bridge\CustomGrant;
 
-class DummyClass extends Model
+
+class DummyClass extends CustomGrant
 {
-    //
+	/**
+	 * Unique string that identifies this grant.
+	 * and will be used as grant_type during access
+	 * token requests.
+	 * @var string
+	 */
+    protected $identifier = 'custom_grant_identifier';
+
+    /**
+     * Required parameters in access token request
+     * The parameters used for authentication instead of
+     * username and password.
+     * @var array
+     */
+    protected $request_params = [
+    	// e.g 'facebook_access_token',
+    ];
+
+    /**
+     *  Retrieve a user by the given parameters.
+     *
+     * @param Model  $model          The model being authenticated
+     * @param array  $request_params Request parameters used to authenticate the user
+     * @param string $guard          The guard used for authentication
+     * @param string $grantType
+     * @param \League\OAuth2\Server\Entities\ClientEntityInterface  $clientEntity
+     *
+     * @return \Laravel\Passport\Bridge\User|null
+     * @throws \League\OAuth2\Server\Exception\OAuthServerException
+     */
+    protected function getUserEntityByRequestParams(Model $model, $request_params,
+        $guard, $grantType, ClientEntityInterface $clientEntity)
+    {
+    	// Do your logic to authenticate the user
+    	// Such as contacting facebook server to validate
+        // user facebook access token.
+    	// Return false or void if authentication fails.
+    	// This will throw OAuthServerException.
+    	
+
+        return new User($model->getAuthIdentifier());
+    }
+
 }
