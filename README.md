@@ -56,6 +56,22 @@ Route::middleware('auth:admin')->get('/user', function (Request $request) {
 - Of course all models must extend `Illuminate\Foundation\Auth\User` and use `Laravel\Passport\HasApiTokens` Trait
 - That's all.
 
+# Revoke access token
+```
+$model = auth()->user();
+// Get model/user access token
+$accessToken = $model->token();
+// Revoke access token
+DB::table('oauth_refresh_tokens')->where('access_token_id', $accessToken->id)->update([
+    'revoked' => true
+]);
+
+$accessToken->revoke();
+```
+
+# Warning
+- Relationships that depend on `oauth_access_tokens` table such as `$user->tokens()` and `$token->user();` are not yet implemented for multiauth and won't work, You wouldn't need them anyway. However they will be implemented in a future release.
+
 # Custom grants:
 - This feature is still in development.
 
