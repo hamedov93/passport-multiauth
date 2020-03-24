@@ -1,17 +1,22 @@
 {
     "name": "hamedov/passport-multiauth",
     "description": "Multiauth and custom grants for laravel passport",
+    "keywords": ["laravel", "passport", "multiauth", "custom grant"],
     "require": {
-        "laravel/passport": "^7.3"
+        "php": "^7.2",
+        "laravel/passport": "^8.0"
     },
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/hamedov93/passport-multiauth/issues",
+        "source": "https://github.com/hamedov93/passport-multiauth"
+    },
     "authors": [
         {
             "name": "Mohamed Hamed",
             "email": "m.hamed@nezam.io"
         }
     ],
-    "minimum-stability": "dev",
     "extra": {
         "laravel": {
             "providers": [
@@ -27,5 +32,10 @@
         "psr-4": {
             "Hamedov\\PassportMultiauth\\": "src/"
         }
-    }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
