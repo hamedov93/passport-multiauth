@@ -17,7 +17,7 @@ class AccessTokenRepository extends PassportAccessTokenRepository
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         // Using our AccessToken class to override convertToJwt
-        return new AccessToken($userIdentifier, $scopes);
+        return new AccessToken($userIdentifier, $scopes, $clientEntity);
     }
 
     /**

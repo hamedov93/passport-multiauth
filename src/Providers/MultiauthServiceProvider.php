@@ -7,6 +7,7 @@ use Laravel\Passport\Bridge\RefreshTokenRepository;
 use League\OAuth2\Server\AuthorizationServer;
 use Hamedov\PassportMultiauth\Commands\GrantMakeCommand;
 
+
 class MultiauthServiceProvider extends ServiceProvider
 {
     public function boot()
