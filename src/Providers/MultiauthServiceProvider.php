@@ -31,7 +31,7 @@ class MultiauthServiceProvider extends ServiceProvider
     {
         // Check whether the grants directory exists
         $grants_dir = app_path('Grants');
-        if ( ! file_exists($grants_dir) || \App::runningInConsole())
+        if ( ! file_exists($grants_dir) || empty(config('app.key')))
         {
             return;
         }
