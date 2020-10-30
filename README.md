@@ -5,6 +5,7 @@ This package simply enables you to authenticate models other than App\User using
 
 # Installation
 `composer require hamedov/passport-multiauth`
+- This package overrides `PassportServiceProvider`, so you should remove it from config/app.php providers section.
 
 # Usage
 
