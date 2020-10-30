@@ -1,7 +1,7 @@
 # Passport multiauth
 This package simply enables you to authenticate models other than App\User using laravel passport.
 
-> **Note**: Starting from version 9.x multiauth is built in in laravel passport, therefore this package is usable until version 8.x.
+> **Note**: Starting from version 9.x multiauth is built in in laravel passport, therefore this package is usable until version 8.x. If you still need the custom grants feature please use this package: https://github.com/hamedov93/passport-grants
 
 # Installation
 `composer require hamedov/passport-multiauth`
