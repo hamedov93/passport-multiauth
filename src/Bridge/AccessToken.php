@@ -2,37 +2,62 @@
 
 namespace Hamedov\PassportMultiauth\Bridge;
 
-use Laravel\Passport\Bridge\AccessToken as PassportAccessToken;
+use DateTimeImmutable;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
+use League\OAuth2\Server\Entities\Traits\EntityTrait;
+use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
 use League\OAuth2\Server\CryptKey;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 
-
-class AccessToken extends PassportAccessToken
+class AccessToken  implements AccessTokenEntityInterface
 {
+    use AccessTokenTrait, EntityTrait, TokenEntityTrait;
+
     /**
-     * Generate a JWT from the access token
+     * Create a new token instance.
+     *
+     * @param  string  $userIdentifier
+     * @param  array  $scopes
+     * @param  \League\OAuth2\Server\Entities\ClientEntityInterface  $client
+     * @return void
+     */
+    public function __construct($userIdentifier, array $scopes, ClientEntityInterface $client)
+    {
+        $this->setUserIdentifier($userIdentifier);
+
+        foreach ($scopes as $scope) {
+            $this->addScope($scope);
+        }
+
+        $this->setClient($client);
+    }
+
+    /* Generate a JWT from the access token
      *
      * @param CryptKey $privateKey
      *
      * @return Token
      */
-    public function convertToJWT(CryptKey $privateKey)
+    private function convertToJWT()
     {
         $guard = request()->get('guard') ?: 'api';
+
+        $this->initJwtConfiguration();
         
-        return (new Builder())
-            ->setAudience($this->getClient()->getIdentifier())
-            ->setId($this->getIdentifier(), true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time())
-            ->setExpiration($this->getExpiryDateTime()->getTimestamp())
-            ->setSubject($this->getUserIdentifier())
-            ->set('scopes', $this->getScopes())
-            ->set('guard', $guard)
-            ->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))
-            ->getToken();
+        return $this->jwtConfiguration->builder()
+            ->permittedFor($this->getClient()->getIdentifier())
+            ->identifiedBy($this->getIdentifier())
+            ->issuedAt(new DateTimeImmutable())
+            ->canOnlyBeUsedAfter(new DateTimeImmutable())
+            ->expiresAt($this->getExpiryDateTime())
+            ->relatedTo((string) $this->getUserIdentifier())
+            ->withClaim('scopes', $this->getScopes())
+            ->withClaim('guard', $guard)
+            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 }
