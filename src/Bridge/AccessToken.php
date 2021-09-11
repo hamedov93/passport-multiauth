@@ -2,13 +2,11 @@
 
 namespace Hamedov\PassportMultiauth\Bridge;
 
+use DateTimeImmutable;
 use Laravel\Passport\Bridge\AccessToken as PassportAccessToken;
-
 use League\OAuth2\Server\CryptKey;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
-
 
 class AccessToken extends PassportAccessToken
 {
@@ -19,20 +17,21 @@ class AccessToken extends PassportAccessToken
      *
      * @return Token
      */
-    public function convertToJWT(CryptKey $privateKey)
+    public function convertToJWT()
     {
         $guard = request()->get('guard') ?: 'api';
+
+        $this->initJwtConfiguration();
         
-        return (new Builder())
-            ->setAudience($this->getClient()->getIdentifier())
-            ->setId($this->getIdentifier(), true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time())
-            ->setExpiration($this->getExpiryDateTime()->getTimestamp())
-            ->setSubject($this->getUserIdentifier())
-            ->set('scopes', $this->getScopes())
-            ->set('guard', $guard)
-            ->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))
-            ->getToken();
+        return $this->jwtConfiguration->builder()
+            ->permittedFor($this->getClient()->getIdentifier())
+            ->identifiedBy($this->getIdentifier())
+            ->issuedAt(new DateTimeImmutable())
+            ->canOnlyBeUsedAfter(new DateTimeImmutable())
+            ->expiresAt($this->getExpiryDateTime())
+            ->relatedTo((string) $this->getUserIdentifier())
+            ->withClaim('scopes', $this->getScopes())
+            ->withClaim('guard', $guard)
+            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 }
